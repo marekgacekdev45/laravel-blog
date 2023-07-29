@@ -1,3 +1,5 @@
+@props(['post'])
+
 <!doctype html>
 
 <title>Laravel From Scratch Blog</title>

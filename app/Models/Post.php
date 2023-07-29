@@ -11,7 +11,30 @@ class Post extends Model
 
     protected $guarded = [];
 
-protected $with = ['category','author'];
+    protected $with = ['category', 'author'];
+
+    public function scopeFilter($query, array $filters)
+    {
+        $query->when(
+            $filters['search'] ?? false,
+            fn($query, $search) =>
+            $query
+                ->where('title', 'like', '%' . $search . '%')
+                ->orWhere('excerpt', 'like', '%' . $search . '%')
+                ->orWhere('body', 'like', '%' . $search . '%')
+        );
+        $query->when(
+            $filters['category'] ?? false,
+            fn($query, $category) =>
+            $query->whereHas('category', fn($query) =>
+                $query->where('slug', $category))
+            // $query
+            //     ->whereExsist(fn($query) =>
+            //     $query->from('categories'))
+            //     ->whereColumn('categories.id','posts.category_id')
+            //     ->where('categories.slug',$category)
+        );
+    }
 
     public function category()
     {
@@ -19,28 +42,6 @@ protected $with = ['category','author'];
     }
     public function author()
     {
-        return $this->belongsTo(User::class,'user_id');
+        return $this->belongsTo(User::class, 'user_id');
     }
 }
-
-
-
-// }
-// class Post extends Model
-// {
-//     use HasFactory;
-
-//     // protected $guarded = ['id'];
-//     // protected $fillable = ['title','body','excerpt'];
-
-//     protected $guarded = [];
-
-//     // public function getRouteKeyName()
-//     // {
-//     //     return 'slug';
-//     // }
-
-//     public function category(){
-//         return $this->belongsTo(Category::class);
-//     }
-// }
