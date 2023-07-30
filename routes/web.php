@@ -1,10 +1,11 @@
 <?php
 
-use App\Http\Controllers\PostController;
 use App\Models\Post;
 use App\Models\User;
 use App\Models\Category;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\PostController;
+use App\Http\Controllers\RegisterController;
 
 /*
 |--------------------------------------------------------------------------
@@ -29,3 +30,7 @@ Route::get('authors/{author:username}', function (User $author) {
         
     ]);
 });
+
+
+Route::get('register',[RegisterController::class,'create']);
+Route::post('register',[RegisterController::class,'store']);
