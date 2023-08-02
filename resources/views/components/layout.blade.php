@@ -18,38 +18,52 @@
                 </a>
             </div>
 
-            <div class="mt-8 md:mt-0">
-                <a href="/" class="text-xs font-bold uppercase">Home Page</a>
+            <div class="mt-8 md:mt-0 flex items-center">
+                @auth
 
-                <a href="#" class="bg-blue-500 ml-3 rounded-full text-xs font-semibold text-white uppercase py-3 px-5">
+                    <span class="text-xs font-bold uppercase">Welcome {{ auth()->user()->name }}</span>
+                    <form action="/logout" method="post" class="text-xs text-blue-500 ml-6">
+                        @csrf
+                        <button type="submit">Log Out</button>
+                    </form>
+                @else
+                    <a href="/login" class="text-xs font-bold uppercase mr-6">Login</a>
+                    <a href="/register" class="text-xs font-bold uppercase">Register</a>
+
+                @endauth
+
+
+
+
+                <a href="#"
+                    class="bg-blue-500 ml-3 rounded-full text-xs font-semibold text-white uppercase py-3 px-5">
                     Subscribe for Updates
                 </a>
             </div>
         </nav>
 
-       {{$slot}}
+        {{ $slot }}
 
-                            <footer class="flex justify-between items-center mt-8">
-                                <div class="flex items-center text-sm">
-                                    <img src="/images/lary-avatar.svg" alt="Lary avatar">
-                                    <div class="ml-3">
-                                        <h5 class="font-bold">Lary Laracore</h5>
-                                        <h6>Mascot at Laracasts</h6>
-                                    </div>
-                                </div>
-
-                                <div>
-                                    <a href="#"
-                                       class="transition-colors duration-300 text-xs font-semibold bg-gray-200 hover:bg-gray-300 rounded-full py-2 px-8"
-                                    >
-                                        Read More
-                                    </a>
-                                </div>
-                            </footer>
-                        </div>
-                    </div>
-                </article>
+        <footer class="flex justify-between items-center mt-8">
+            <div class="flex items-center text-sm">
+                <img src="/images/lary-avatar.svg" alt="Lary avatar">
+                <div class="ml-3">
+                    <h5 class="font-bold">Lary Laracore</h5>
+                    <h6>Mascot at Laracasts</h6>
+                </div>
             </div>
+
+            <div>
+                <a href="#"
+                    class="transition-colors duration-300 text-xs font-semibold bg-gray-200 hover:bg-gray-300 rounded-full py-2 px-8">
+                    Read More
+                </a>
+            </div>
+        </footer>
+        </div>
+        </div>
+        </article>
+        </div>
         </main>
 
         <footer class="bg-gray-100 border border-black border-opacity-5 rounded-xl text-center py-16 px-10 mt-16">
@@ -67,12 +81,11 @@
                             </label>
 
                             <input id="email" type="text" placeholder="Your email address"
-                                   class="lg:bg-transparent py-2 lg:py-0 pl-4 focus-within:outline-none">
+                                class="lg:bg-transparent py-2 lg:py-0 pl-4 focus-within:outline-none">
                         </div>
 
                         <button type="submit"
-                                class="transition-colors duration-300 bg-blue-500 hover:bg-blue-600 mt-4 lg:mt-0 lg:ml-3 rounded-full text-xs font-semibold text-white uppercase py-3 px-8"
-                        >
+                            class="transition-colors duration-300 bg-blue-500 hover:bg-blue-600 mt-4 lg:mt-0 lg:ml-3 rounded-full text-xs font-semibold text-white uppercase py-3 px-8">
                             Subscribe
                         </button>
                     </form>
@@ -81,5 +94,5 @@
         </footer>
     </section>
 
-   <x-flash/>
+    <x-flash />
 </body>
