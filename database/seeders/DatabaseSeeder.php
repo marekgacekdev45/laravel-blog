@@ -17,9 +17,9 @@ class DatabaseSeeder extends Seeder
     {
 
         
-        User::truncate();
-        Category::truncate();
-        Post::truncate();
+        // User::truncate();
+        // Category::truncate();
+        // Post::truncate();
 
         
 
