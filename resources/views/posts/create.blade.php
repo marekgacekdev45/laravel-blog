@@ -1,6 +1,6 @@
 <x-layout>
     <x-panel class="max-w-xl mx-auto">
-        <form action="{{ route('admin.post.create') }}" method="post">
+        <form action="{{ route('admin.post.create') }}" method="post" enctype="multipart/form-data">
             @csrf
 
             <div class="mb-6">
@@ -18,6 +18,16 @@
                     value="{{ old('excerpt') }}">
 
                 @error('excerpt')
+                    <p class="text-red-500 text-xs mt-2">{{ $message }}</p>
+                @enderror
+            </div>
+
+            <div class="mb-6">
+                <label for="thumbnail" class="block mb-2 uppercase font-bold text-xs text-gray-700">thumbnail</label>
+                <input type="file" class="border border-gray-400 p-2 w-full" name="thumbnail" id="thumbnail" required
+                    value="{{ old('thumbnail') }}">
+
+                @error('thumbnail')
                     <p class="text-red-500 text-xs mt-2">{{ $message }}</p>
                 @enderror
             </div>
