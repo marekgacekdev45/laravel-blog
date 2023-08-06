@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\SessionController;
 use App\Http\Controllers\RegisterController;
+use App\Http\Controllers\AdminPostController;
 use Illuminate\Validation\ValidationException;
 use App\Http\Controllers\PostCommentsController;
 
@@ -23,7 +24,7 @@ use App\Http\Controllers\PostCommentsController;
 
 Route::post('newsletter', function () {
     request()->validate([
-        'email'=>'required|email'
+        'email' => 'required|email'
     ]);
 
     $mailchimp = new \MailchimpMarketing\ApiClient();
@@ -35,21 +36,21 @@ Route::post('newsletter', function () {
 
 
 
-try{
+    try {
 
-    $response = $mailchimp->lists->addListMember("8e159b04ad", [
-        "email_address" => request('email'),
-        "status" => "subscribed",
-    ]);
-}catch(\Exception $e){
-    throw ValidationException::withMessages([
-        'email'=>'Podany email nie może zostać użyty'
-    ]);
-}
-    
+        $response = $mailchimp->lists->addListMember("8e159b04ad", [
+            "email_address" => request('email'),
+            "status" => "subscribed",
+        ]);
+    } catch (\Exception $e) {
+        throw ValidationException::withMessages([
+            'email' => 'Podany email nie może zostać użyty'
+        ]);
+    }
 
 
-    return redirect('/')->with('success','Zapisałeś się do newslettera');
+
+    return redirect('/')->with('success', 'Zapisałeś się do newslettera');
 })->name('newsletter.subscribe');
 
 
@@ -57,7 +58,7 @@ try{
 
 Route::get('/', [PostController::class, 'index'])->name('home');
 
-Route::get('posts/{post:slug}', [PostController::class, 'show']);
+Route::get('posts/{post:slug}', [PostController::class, 'show'])->name('post.show');
 Route::post('posts/{post:slug}/comments', [PostCommentsController::class, 'store'])->name('comments.store');
 
 
@@ -79,5 +80,12 @@ Route::post('login', [SessionController::class, 'store'])->middleware('guest');
 
 Route::post('logout', [SessionController::class, 'destroy'])->middleware('auth');
 
-Route::get('admin/posts/create',[PostController::class,'create'])->name('admin.post.create')->middleware(('admin'));
-Route::post('admin/posts/create',[PostController::class,'store'])->name('admin.post.store')->middleware(('admin'));
+Route::middleware('can:admin')->group(function () {
+    Route::get('admin/posts', [AdminPostController::class, 'index'])->name('admin.posts.index');
+    Route::get('admin/posts/create', [AdminPostController::class, 'create'])->name('admin.post.create');
+
+    Route::get('admin/posts/{post:slug}/edit', [AdminPostController::class, 'edit'])->name('admin.post.edit');
+    Route::patch('admin/posts/{post:slug}', [AdminPostController::class, 'update'])->name('admin.post.update');
+
+    Route::delete('admin/posts/{post:slug}', [AdminPostController::class, 'destroy'])->name('admin.post.destroy');
+});
